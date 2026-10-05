@@ -2259,6 +2259,360 @@
 // }
 
 // export default Products;
+// import { useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import "./Products.css";
+
+// function Products() {
+//   const navigate = useNavigate();
+
+//   const [products, setProducts] = useState([]);
+//   const [isAdmin, setIsAdmin] = useState(false);
+//   const [loading, setLoading] = useState(true);
+
+//   // ==============================
+//   // GET USER AND PRODUCTS
+//   // ==============================
+
+//   useEffect(() => {
+//     const token = localStorage.getItem("access");
+
+//     if (!token) {
+//       navigate("/login");
+//       return;
+//     }
+
+//     // ==============================
+//     // GET CURRENT USER
+//     // ==============================
+
+//     fetch("http://127.0.0.1:8000/api/user/", {
+//       method: "GET",
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     })
+//       .then((response) => {
+//         if (!response.ok) {
+//           throw new Error("User authentication failed");
+//         }
+
+//         return response.json();
+//       })
+//       .then((userData) => {
+//         console.log("Logged User:", userData);
+
+//         if (userData.is_staff === true) {
+//           setIsAdmin(true);
+//           localStorage.setItem("isAdmin", "true");
+//         } else {
+//           setIsAdmin(false);
+//           localStorage.setItem("isAdmin", "false");
+//         }
+//       })
+//       .catch((error) => {
+//         console.error("User Error:", error);
+//       });
+
+//     // ==============================
+//     // GET PRODUCTS
+//     // ==============================
+
+//     fetch("http://127.0.0.1:8000/api/products/", {
+//       method: "GET",
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     })
+//       .then((response) => {
+//         console.log("Product Response:", response);
+
+//         if (!response.ok) {
+//           throw new Error("Failed to fetch products");
+//         }
+
+//         return response.json();
+//       })
+//       .then((data) => {
+//         console.log("Products:", data);
+
+//         setProducts(data);
+//         setLoading(false);
+//       })
+//       .catch((error) => {
+//         console.error("Product Error:", error);
+//         setLoading(false);
+//       });
+//   }, [navigate]);
+
+//   // ==============================
+//   // ADD TO CART
+//   // ==============================
+
+//   const addToCart = async (product) => {
+//     const token = localStorage.getItem("access");
+
+//     if (!token) {
+//       alert("Please login first");
+//       navigate("/login");
+//       return;
+//     }
+
+//     try {
+//       const response = await fetch(
+//         "http://127.0.0.1:8000/api/cart/",
+//         {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: JSON.stringify({
+//             product: product.id,
+//             quantity: 1,
+//           }),
+//         }
+//       );
+
+//       const data = await response.json();
+
+//       console.log("Cart Response:", data);
+
+//       if (response.ok) {
+//         alert("Product added to cart!");
+//         navigate("/cart");
+//       } else {
+//         console.log("Cart Error:", data);
+//         alert(JSON.stringify(data));
+//       }
+//     } catch (error) {
+//       console.error("Cart Error:", error);
+//       alert("Server connection error");
+//     }
+//   };
+
+//   // ==============================
+//   // BUY NOW
+//   // ==============================
+
+//   const buyNow = (product) => {
+//     const buyNowProduct = {
+//       ...product,
+//       price: `$${product.price}`,
+//       quantity: 1,
+//     };
+
+//     localStorage.setItem(
+//       "buyNowProduct",
+//       JSON.stringify(buyNowProduct)
+//     );
+
+//     navigate("/checkout");
+//   };
+
+//   // ==============================
+//   // DELETE PRODUCT
+//   // ==============================
+
+//   const deleteProduct = async (id) => {
+//     const confirmDelete = window.confirm(
+//       "Are you sure you want to delete this product?"
+//     );
+
+//     if (!confirmDelete) {
+//       return;
+//     }
+
+//     const token = localStorage.getItem("access");
+
+//     if (!token) {
+//       alert("Please login first");
+//       navigate("/login");
+//       return;
+//     }
+
+//     try {
+//       const response = await fetch(
+//         `http://127.0.0.1:8000/api/products/${id}/`,
+//         {
+//           method: "DELETE",
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+
+//       if (response.ok) {
+//         alert("Product deleted successfully!");
+
+//         setProducts((oldProducts) =>
+//           oldProducts.filter(
+//             (product) => product.id !== id
+//           )
+//         );
+//       } else {
+//         const data = await response.json();
+
+//         console.log("Delete Error:", data);
+//         alert("Delete failed");
+//       }
+//     } catch (error) {
+//       console.error("Delete Error:", error);
+//       alert("Server connection error");
+//     }
+//   };
+
+//   // ==============================
+//   // LOADING
+//   // ==============================
+
+//   if (loading) {
+//     return (
+//       <section className="products-section">
+//         <div className="products-title">
+//           <h2>
+//             Our <span>products</span>
+//           </h2>
+//         </div>
+
+//         <p>Loading products...</p>
+//       </section>
+//     );
+//   }
+
+//   // ==============================
+//   // PRODUCTS PAGE
+//   // ==============================
+
+//   return (
+//     <section className="products-section">
+
+//       {/* TITLE */}
+
+//       <div className="products-title">
+//         <h2>
+//           Our <span>products</span>
+//         </h2>
+
+//         <div className="products-line"></div>
+
+//         {/* ADMIN ADD PRODUCT */}
+
+//         {isAdmin && (
+//           <button
+//             className="add-product-btn"
+//             onClick={() => navigate("/add-product")}
+//           >
+//             + Add Product
+//           </button>
+//         )}
+//       </div>
+
+//       {/* PRODUCTS GRID */}
+
+//       <div className="products-grid">
+
+//         {products.length === 0 ? (
+//           <div className="no-products">
+//             <p>No products available</p>
+//           </div>
+//         ) : (
+//           products.map((product) => (
+//             <div
+//               className="product-card"
+//               key={product.id}
+//             >
+
+//               {/* PRODUCT IMAGE */}
+
+//               <div className="product-image">
+//                 <img
+//                   src={
+//                     product.image
+//                       ? product.image
+//                       : "/products/p1.png"
+//                   }
+//                   alt={product.name}
+//                 />
+//               </div>
+
+//               {/* PRODUCT INFO */}
+
+//               <div className="product-info">
+//                 <h3>{product.name}</h3>
+
+//                 <p>
+//                   ${product.price}
+//                 </p>
+//               </div>
+
+//               {/* PRODUCT BUTTONS */}
+
+//               <div className="product-actions">
+
+//                 {isAdmin ? (
+//                   <>
+//                     {/* EDIT */}
+
+//                     <button
+//                       className="edit-btn"
+//                       onClick={() =>
+//                         navigate(
+//                           `/edit-product/${product.id}`
+//                         )
+//                       }
+//                     >
+//                       Edit
+//                     </button>
+
+//                     {/* DELETE */}
+
+//                     <button
+//                       className="delete-btn"
+//                       onClick={() =>
+//                         deleteProduct(product.id)
+//                       }
+//                     >
+//                       Delete
+//                     </button>
+//                   </>
+//                 ) : (
+//                   <>
+//                     {/* ADD TO CART */}
+
+//                     <button
+//                       className="cart-btn"
+//                       onClick={() =>
+//                         addToCart(product)
+//                       }
+//                     >
+//                       Add to Cart
+//                     </button>
+
+//                     {/* BUY NOW */}
+
+//                     <button
+//                       className="buy-btn"
+//                       onClick={() =>
+//                         buyNow(product)
+//                       }
+//                     >
+//                       Buy Now
+//                     </button>
+//                   </>
+//                 )}
+
+//               </div>
+//             </div>
+//           ))
+//         )}
+
+//       </div>
+//     </section>
+//   );
+// }
+
+// export default Products;
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Products.css";
@@ -2286,7 +2640,7 @@ function Products() {
     // GET CURRENT USER
     // ==============================
 
-    fetch("http://127.0.0.1:8000/api/user/", {
+    fetch("/api/user/", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -2318,7 +2672,7 @@ function Products() {
     // GET PRODUCTS
     // ==============================
 
-    fetch("http://127.0.0.1:8000/api/products/", {
+    fetch("/api/products/", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -2360,7 +2714,7 @@ function Products() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/api/cart/",
+        "/api/cart/",
         {
           method: "POST",
           headers: {
@@ -2433,7 +2787,7 @@ function Products() {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/api/products/${id}/`,
+        `/api/products/${id}/`,
         {
           method: "DELETE",
           headers: {

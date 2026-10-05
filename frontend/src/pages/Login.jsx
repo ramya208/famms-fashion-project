@@ -207,6 +207,7 @@
 // }
 
 // export default Login;
+// 
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
@@ -235,7 +236,7 @@ function Login() {
       // ==============================
 
       const response = await fetch(
-        "http://127.0.0.1:8000/api/token/",
+        "/api/token/",
         {
           method: "POST",
 
@@ -263,7 +264,7 @@ function Login() {
         // ==============================
 
         const userResponse = await fetch(
-          "http://127.0.0.1:8000/api/user/",
+          "/api/user/",
           {
             headers: {
               Authorization: `Bearer ${data.access}`,
