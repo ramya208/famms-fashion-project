@@ -1,0 +1,357 @@
+/* =========================
+   PAGE TITLE
+========================= */
+
+.checkout-page-title {
+  width: 100%;
+  height: 300px;
+
+  background: #f1f1f2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkout-page-title h1 {
+  margin: 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 60px;
+
+  font-weight: 700;
+
+  color: #003245;
+}
+
+
+/* =========================
+   CHECKOUT SECTION
+========================= */
+
+.checkout-section {
+  width: 100%;
+
+  padding: 70px 20px;
+
+  background: white;
+
+  box-sizing: border-box;
+}
+
+.checkout-container {
+  max-width: 1140px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 1fr 400px;
+
+  gap: 50px;
+
+  align-items: start;
+}
+
+
+/* =========================
+   CUSTOMER DETAILS
+========================= */
+
+.customer-details {
+  width: 100%;
+}
+
+.customer-details h2,
+.checkout-summary h2 {
+  margin: 0 0 30px;
+
+  color: #003245;
+
+  font-size: 26px;
+}
+
+
+/* Form */
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  border: 1px solid #ccc;
+
+  outline: none;
+
+  padding: 13px 15px;
+
+  font-size: 15px;
+
+  font-family: Arial, sans-serif;
+}
+
+.form-group input {
+  height: 50px;
+}
+
+.form-group textarea {
+  height: 130px;
+
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #ff4652;
+}
+
+
+/* City + Pincode */
+
+.checkout-row {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 20px;
+}
+
+
+/* =========================
+   ORDER SUMMARY
+========================= */
+
+.checkout-summary {
+  background: #f7f7f7;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+}
+
+.checkout-products {
+  width: 100%;
+}
+
+.checkout-product {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 15px 0;
+
+  border-bottom: 1px solid #ddd;
+}
+
+.checkout-product-info {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+}
+
+.checkout-product-info img {
+  width: 65px;
+
+  height: 70px;
+
+  object-fit: contain;
+
+  background: white;
+
+  padding: 5px;
+
+  box-sizing: border-box;
+}
+
+.checkout-product-info h3 {
+  margin: 0 0 6px;
+
+  font-size: 15px;
+
+  color: #222;
+}
+
+.checkout-product-info p {
+  margin: 0;
+
+  font-size: 13px;
+
+  color: #777;
+}
+
+.checkout-product > span {
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #333;
+}
+
+
+/* Summary */
+
+.checkout-summary-line {
+  width: 100%;
+
+  height: 1px;
+
+  background: #ddd;
+
+  margin: 25px 0;
+}
+
+.checkout-summary-row {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-bottom: 18px;
+
+  color: #555;
+
+  font-size: 15px;
+}
+
+.checkout-total {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-top: 25px;
+
+  padding-top: 20px;
+
+  border-top: 1px solid #ddd;
+
+  color: #003245;
+
+  font-size: 20px;
+
+  font-weight: 700;
+}
+
+
+/* =========================
+   PLACE ORDER
+========================= */
+
+.place-order-btn {
+  width: 100%;
+
+  height: 52px;
+
+  margin-top: 25px;
+
+  border: none;
+
+  background: #ff4652;
+
+  color: white;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.place-order-btn:hover {
+  background: #e63946;
+}
+.payment-method {
+  margin-top: 30px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+
+.payment-method h2 {
+  margin: 0 0 18px;
+  font-size: 20px;
+  color: #003245;
+}
+
+.cod-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.cod-option input {
+  width: 17px;
+  height: 17px;
+  accent-color: #ff4652;
+}
+
+.payment-method p {
+  margin: 10px 0 0 27px;
+  font-size: 13px;
+  color: #777;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+  .checkout-container {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .checkout-page-title {
+    height: 220px;
+  }
+
+  .checkout-page-title h1 {
+    font-size: 42px;
+  }
+
+  .checkout-section {
+    padding: 45px 20px;
+  }
+
+  .checkout-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .checkout-summary {
+    padding: 25px;
+  }
+
+}

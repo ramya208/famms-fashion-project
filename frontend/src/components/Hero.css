@@ -1,0 +1,260 @@
+.hero {
+  min-height: 600px;
+  /* background: #f1f1f2; */
+  background:hsl(0, 0%, 84%);
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding-left: 7%;
+}
+
+.hero-content {
+  width: 48%;
+  z-index: 2;
+}
+
+.hero-content h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 68px;
+  line-height: 1.05;
+  color: #082f40;
+}
+
+.hero-content h1 span {
+  color: #ff4652;
+}
+
+.hero-content p {
+  max-width: 520px;
+  margin-top: 25px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.hero-content button {
+  margin-top: 25px;
+  padding: 15px 45px;
+  border: none;
+  background: #ff4652;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* .hero-image {
+  width: 52%;
+  height: 600px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom;
+} */
+
+.slider-dots {
+  position: absolute;
+  bottom: 35px;
+  left: 7%;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.slider-dots span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: white;
+}
+
+.slider-dots .active-dot {
+  width: 20px;
+  height: 20px;
+  background: #ff4652;
+}
+.hero-image {
+  width: 42%;
+  height: 600px;
+  right:10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  right:20px;
+}
+
+.hero-image img {
+  width: 200%;
+  height: 100%;
+  right:60%;
+  /* object-fit: contain; */
+  object-position: center center;
+}
+
+
+@media (max-width: 768px) {
+
+  .hero {
+    padding: 40px 20px;
+    flex-direction: column;
+  }
+
+  .hero-content {
+    width: 100%;
+  }
+
+  .hero-content h1 {
+    font-size: 45px;
+  }
+
+  .hero-image {
+    width: 100%;
+    height: 400px;
+  }
+}
+.hero {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  overflow: hidden;
+}
+
+/* Fashion image full hero background */
+.hero-background {
+  position: absolute;
+  top: 0%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hero-background img {
+  width: 110%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+/* Text above image */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  right:5%;
+
+  width: 55%;
+  padding-left: 7%;
+  padding-top: 100px;
+  top:-10%;
+}
+
+.hero-content h1 {
+  margin: 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 68px;
+  line-height: 1.05;
+
+  color: #082f40;
+}
+
+.hero-content h1 span {
+  color: #ff4652;
+}
+
+.hero-content p {
+  max-width: 520px;
+
+  margin-top: 25px;
+
+  font-size: 16px;
+  line-height: 1.5;
+
+  color: #222;
+}
+
+.hero-content button {
+  margin-top: 25px;
+
+  padding: 15px 45px;
+
+  border: none;
+  background: #ff4652;
+
+  color: white;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.hero-content button:hover {
+  background: #e83b47;
+}
+
+/* Slider dots */
+.slider-dots {
+  position: absolute;
+
+  left: 7%;
+  bottom: 35px;
+
+  z-index: 3;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.slider-dots span {
+  width: 12px;
+  height: 12px;
+
+  border-radius: 50%;
+
+  background: white;
+}
+
+.slider-dots .active-dot {
+  width: 20px;
+  height: 20px;
+
+  background: #ff4652;
+}
+
+
+/* Mobile */
+@media (max-width: 768px) {
+
+  .hero {
+    height: 700px;
+  }
+
+  .hero-content {
+    width: 100%;
+    padding: 60px 25px;
+  }
+
+  .hero-content h1 {
+    font-size: 45px;
+  }
+
+  .hero-content p {
+    max-width: 100%;
+  }
+
+  .hero-background img {
+    object-position: center;
+  }
+}
