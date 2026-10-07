@@ -191,16 +191,12 @@ DEBUG = os.environ.get("DEBUG", "True") == "True"
 #     "ALLOWED_HOSTS",
 #     "127.0.0.1,localhost"
 # ).split(",")
-# ALLOWED_HOSTS = [
-#     "famms-fashion-project-1.onrender.com",
-#     "localhost",
-#     "127.0.0.1",
-# ]
 ALLOWED_HOSTS = [
-    "127.0.0.1",
+    "famms-fashion-project-1.onrender.com",
     "localhost",
-    "famms-fashion-project-2.onrender.com",
+    "127.0.0.1",
 ]
+
 # ==========================================
 # APPLICATIONS
 # ==========================================
