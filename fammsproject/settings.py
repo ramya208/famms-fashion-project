@@ -187,11 +187,15 @@ SECRET_KEY = os.environ.get(
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 
-ALLOWED_HOSTS = os.environ.get(
-    "ALLOWED_HOSTS",
-    "127.0.0.1,localhost"
-).split(",")
-
+# ALLOWED_HOSTS = os.environ.get(
+#     "ALLOWED_HOSTS",
+#     "127.0.0.1,localhost"
+# ).split(",")
+ALLOWED_HOSTS = [
+    "famms-fashion-project-1.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 # ==========================================
 # APPLICATIONS
