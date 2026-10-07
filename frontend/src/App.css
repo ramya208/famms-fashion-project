@@ -1,4 +1,4 @@
-.counter {
+/* .counter {
   font-size: 16px;
   padding: 5px 10px;
   border-radius: 5px;
@@ -63,7 +63,54 @@
   place-content: center;
   place-items: center;
   flex-grow: 1;
+.signup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 
+  background: rgba(0, 0, 0, 0.6);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+}
+
+.signup-popup {
+  position: relative;
+  width: 420px;
+  max-width: 90%;
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+
+  border: none;
+  background: transparent;
+
+  font-size: 24px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  z-index: 10;
+}
+
+.close-btn:hover {
+  color: red;
+}
   @media (max-width: 1024px) {
     padding: 32px 20px 24px;
     gap: 18px;
@@ -181,4 +228,4 @@
     right: 0;
     border-right-color: var(--border);
   }
-}
+} */

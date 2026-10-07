@@ -105,6 +105,78 @@
 // }
 
 // export default Navbar;
+// import "./Navbar.css";
+// import { Link } from "react-router-dom";
+
+// function Navbar() {
+//   const isAdmin = localStorage.getItem("isAdmin") === "true";
+
+//   return (
+//     <header className="navbar">
+//       <div className="nav-container">
+
+//         {/* Logo */}
+//         <Link to="/home" className="logo">
+//           <img src="/logofam.png" alt="Famms" />
+//         </Link>
+
+//         {/* Menu */}
+//         <nav className="nav-links">
+
+//           <Link to="/home" className="active">
+//             HOME
+//           </Link>
+
+//           {/* Pages Dropdown */}
+//           <div className="pages-dropdown">
+//             <a href="#" className="pages-link">
+//               PAGES <span>⌄</span>
+//             </a>
+
+//             <div className="dropdown-menu">
+//               <Link to="/about">About</Link>
+//               <Link to="/testimonial">Testimonial</Link>
+//             </div>
+//           </div>
+
+//           <Link to="/products">
+//             PRODUCTS
+//           </Link>
+
+//           {/* My Orders - User Only */}
+//           {!isAdmin && (
+//             <Link to="/my-orders">
+//               MY ORDERS
+//             </Link>
+//           )}
+
+//           <Link to="/blog">
+//             BLOG
+//           </Link>
+
+//           <Link to="/contact">
+//             CONTACT
+//           </Link>
+
+//           {/* Cart */}
+//           <Link to="/cart" className="cart-link">
+//             <i className="fa fa-shopping-cart"></i>
+//             🛒
+//           </Link>
+
+//           {/* Search */}
+//           <a href="#search" className="icon">
+//             🔍
+//           </a>
+
+//         </nav>
+
+//       </div>
+//     </header>
+//   );
+// }
+
+// export default Navbar;
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 
@@ -143,10 +215,17 @@ function Navbar() {
             PRODUCTS
           </Link>
 
-          {/* My Orders - User Only */}
+          {/* User Only */}
           {!isAdmin && (
             <Link to="/my-orders">
               MY ORDERS
+            </Link>
+          )}
+
+          {/* Admin Only */}
+          {isAdmin && (
+            <Link to="/customer-orders">
+              CUSTOMER ORDERS
             </Link>
           )}
 

@@ -119,6 +119,8 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Signup.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function Signup() {
   const navigate = useNavigate();
 
@@ -141,7 +143,7 @@ function Signup() {
 
     try {
       const response = await fetch(
-        "/api/signup/",
+        `${API_URL}/api/signup/`,
         {
           method: "POST",
           headers: {
@@ -155,6 +157,11 @@ function Signup() {
 
       if (response.ok) {
         alert("Signup successful!");
+
+        // IMPORTANT:
+        // Do NOT remove pendingAction or pendingProduct here.
+        // They are needed after Login.
+
         navigate("/login");
       } else {
         alert(JSON.stringify(data));
