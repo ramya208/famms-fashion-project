@@ -787,6 +787,37 @@ class AdminCustomerOrdersView(APIView):
 
 
 
+# class ProductViewSet(viewsets.ModelViewSet):
+
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+
+#     def get_queryset(self):
+#         user = self.request.user
+
+#         # Admin → அவர் add செய்த products மட்டும்
+#         if user.is_authenticated and user.is_staff:
+#             return Product.objects.filter(added_by=user)
+
+#         # Normal User → எல்லா products
+#         return Product.objects.all()
+
+#     def get_permissions(self):
+
+#         # Products பார்க்க login அவசியம்
+#         if self.action in ["list", "retrieve"]:
+#             return [IsAuthenticated()]
+
+#         # Add / Edit / Delete → Admin மட்டும்
+#         return [
+#             IsAuthenticated(),
+#             IsAdminUser()
+#         ]
+
+#     def perform_create(self, serializer):
+
+#         # Login செய்த admin தான் product owner
+#         serializer.save(added_by=self.request.user)    
 class ProductViewSet(viewsets.ModelViewSet):
 
     queryset = Product.objects.all()
@@ -799,14 +830,14 @@ class ProductViewSet(viewsets.ModelViewSet):
         if user.is_authenticated and user.is_staff:
             return Product.objects.filter(added_by=user)
 
-        # Normal User → எல்லா products
+        # Normal User / Login இல்லாதவர் → எல்லா products
         return Product.objects.all()
 
     def get_permissions(self):
 
-        # Products பார்க்க login அவசியம்
+        # Products பார்க்க login தேவையில்லை
         if self.action in ["list", "retrieve"]:
-            return [IsAuthenticated()]
+            return []
 
         # Add / Edit / Delete → Admin மட்டும்
         return [
@@ -817,4 +848,6 @@ class ProductViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
 
         # Login செய்த admin தான் product owner
-        serializer.save(added_by=self.request.user)    
+        serializer.save(
+            added_by=self.request.user
+        )
