@@ -177,11 +177,201 @@
 // }
 
 // export default Navbar;
+// import "./Navbar.css";
+// import { Link } from "react-router-dom";
+
+// function Navbar() {
+//   const isAdmin = localStorage.getItem("isAdmin") === "true";
+
+//   return (
+//     <header className="navbar">
+//       <div className="nav-container">
+
+//         {/* Logo */}
+//         <Link to="/home" className="logo">
+//           <img src="/logofam.png" alt="Famms" />
+//         </Link>
+
+//         {/* Menu */}
+//         <nav className="nav-links">
+
+//           <Link to="/home" className="active">
+//             HOME
+//           </Link>
+
+//           {/* Pages Dropdown */}
+//           <div className="pages-dropdown">
+//             <a href="#" className="pages-link">
+//               PAGES <span>⌄</span>
+//             </a>
+
+//             <div className="dropdown-menu">
+//               <Link to="/about">About</Link>
+//               <Link to="/testimonial">Testimonial</Link>
+//             </div>
+//           </div>
+
+//           <Link to="/products">
+//             PRODUCTS
+//           </Link>
+
+//           {/* User Only */}
+//           {!isAdmin && (
+//             <Link to="/my-orders">
+//               MY ORDERS
+//             </Link>
+//           )}
+
+//           {/* Admin Only */}
+//           {isAdmin && (
+//             <Link to="/customer-orders">
+//               CUSTOMER ORDERS
+//             </Link>
+//           )}
+
+//           <Link to="/blog">
+//             BLOG
+//           </Link>
+
+//           <Link to="/contact">
+//             CONTACT
+//           </Link>
+
+//           {/* Cart */}
+//           <Link to="/cart" className="cart-link">
+//             <i className="fa fa-shopping-cart"></i>
+//             🛒
+//           </Link>
+
+//           {/* Search */}
+//           <a href="#search" className="icon">
+//             🔍
+//           </a>
+
+//         </nav>
+
+//       </div>
+//     </header>
+//   );
+// }
+
+// export default Navbar;
+// import "./Navbar.css";
+// import { Link, useNavigate } from "react-router-dom";
+
+// function Navbar() {
+//   const navigate = useNavigate();
+
+//   const isAdmin = localStorage.getItem("isAdmin") === "true";
+
+//   const handleLogout = () => {
+//     localStorage.removeItem("access");
+//     localStorage.removeItem("refresh");
+//     localStorage.removeItem("isAdmin");
+//     localStorage.removeItem("userData");
+
+//     navigate("/login");
+//   };
+
+//   return (
+//     <header className="navbar">
+//       <div className="nav-container">
+
+//         {/* Logo */}
+//         <Link to="/home" className="logo">
+//           <img src="/logofam.png" alt="Famms" />
+//         </Link>
+
+//         {/* Menu */}
+//         <nav className="nav-links">
+
+//           <Link to="/home" className="active">
+//             HOME
+//           </Link>
+
+//           {/* Pages Dropdown */}
+//           <div className="pages-dropdown">
+//             <a href="#" className="pages-link">
+//               PAGES <span>⌄</span>
+//             </a>
+
+//             <div className="dropdown-menu">
+//               <Link to="/about">About</Link>
+//               <Link to="/testimonial">Testimonial</Link>
+//             </div>
+//           </div>
+
+//           <Link to="/products">
+//             PRODUCTS
+//           </Link>
+
+//           {/* User Only */}
+//           {!isAdmin && (
+//             <Link to="/my-orders">
+//               MY ORDERS
+//             </Link>
+//           )}
+
+//           {/* Admin Only */}
+//           {isAdmin && (
+//             <Link to="/customer-orders">
+//               CUSTOMER ORDERS
+//             </Link>
+//           )}
+
+//           <Link to="/blog">
+//             BLOG
+//           </Link>
+
+//           <Link to="/contact">
+//             CONTACT
+//           </Link>
+
+//           {/* Cart */}
+//           <Link to="/cart" className="cart-link">
+//             <i className="fa fa-shopping-cart"></i>
+//             🛒
+//           </Link>
+
+//           {/* Search */}
+//           <a href="#search" className="icon">
+//             🔍
+//           </a>
+
+//           {/* Logout */}
+//           <button
+//             type="button"
+//             onClick={handleLogout}
+//             className="logout-btn"
+//           >
+//             LOGOUT
+//           </button>
+
+//         </nav>
+
+//       </div>
+//     </header>
+//   );
+// }
+
+// export default Navbar;
 import "./Navbar.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
+  const navigate = useNavigate();
+
   const isAdmin = localStorage.getItem("isAdmin") === "true";
+
+  const handleLogout = () => {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    localStorage.removeItem("isAdmin");
+    localStorage.removeItem("userData");
+
+    // Logout → Home → Signup Popup
+    navigate("/home");
+  };
 
   return (
     <header className="navbar">
@@ -211,6 +401,7 @@ function Navbar() {
             </div>
           </div>
 
+          {/* Products */}
           <Link to="/products">
             PRODUCTS
           </Link>
@@ -229,10 +420,12 @@ function Navbar() {
             </Link>
           )}
 
+          {/* Blog */}
           <Link to="/blog">
             BLOG
           </Link>
 
+          {/* Contact */}
           <Link to="/contact">
             CONTACT
           </Link>
@@ -247,6 +440,15 @@ function Navbar() {
           <a href="#search" className="icon">
             🔍
           </a>
+
+          {/* Logout */}
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="logout-btn"
+          >
+            LOGOUT
+          </button>
 
         </nav>
 
