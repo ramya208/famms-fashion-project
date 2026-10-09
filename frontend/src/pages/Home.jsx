@@ -332,6 +332,84 @@
 // }
 
 // export default Home;
+// import { useState } from "react";
+
+// import Navbar from "../components/Navbar";
+// import Hero from "../components/Hero";
+// import WhyShop from "../components/WhyShop";
+// import NewArrivals from "../components/NewArrivals";
+// import Products from "../components/Products";
+// import Subscribe from "../components/Subscribe";
+// import Testimonial from "../components/Testimonial";
+// import Footer from "../components/Footer";
+
+// import Signup from "./Signup";
+// import Login from "./Login";
+
+// import "./Home.css";
+
+// function Home() {
+//   const [popup, setPopup] = useState("signup");
+
+//   const closePopup = () => {
+//     setPopup(null);
+//   };
+
+//   const showLogin = () => {
+//     setPopup("login");
+//   };
+
+//   const showSignup = () => {
+//     setPopup("signup");
+//   };
+
+//   return (
+//     <>
+//       {/* HOME PAGE */}
+//       <Navbar />
+//       <Hero />
+//       <WhyShop />
+//       <NewArrivals />
+
+//       {/* PRODUCTS */}
+//       <Products onOpenAuth={showSignup} />
+
+//       <Subscribe />
+//       <Testimonial />
+//       <Footer />
+
+//       {/* AUTH POPUP */}
+//       {popup && (
+//         <div className="signup-overlay">
+//           <div className="signup-popup">
+
+//             {/* CLOSE */}
+//             <button
+//               type="button"
+//               className="close-btn"
+//               onClick={closePopup}
+//             >
+//               ✕
+//             </button>
+
+//             {/* SIGNUP */}
+//             {popup === "signup" && (
+//               <Signup onLoginClick={showLogin} />
+//             )}
+
+//             {/* LOGIN */}
+//             {popup === "login" && (
+//               <Login onSignupClick={showSignup} />
+//             )}
+
+//           </div>
+//         </div>
+//       )}
+//     </>
+//   );
+// }
+
+// export default Home;
 import { useState } from "react";
 
 import Navbar from "../components/Navbar";
@@ -369,6 +447,7 @@ function Home() {
       <Navbar />
       <Hero />
       <WhyShop />
+
       <NewArrivals />
 
       {/* PRODUCTS */}
@@ -382,7 +461,6 @@ function Home() {
       {popup && (
         <div className="signup-overlay">
           <div className="signup-popup">
-
             {/* CLOSE */}
             <button
               type="button"
@@ -401,7 +479,6 @@ function Home() {
             {popup === "login" && (
               <Login onSignupClick={showSignup} />
             )}
-
           </div>
         </div>
       )}

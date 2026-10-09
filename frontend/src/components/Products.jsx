@@ -6590,6 +6590,859 @@
 // }
 
 // export default Products;
+// import { useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import "./Products.css";
+
+// const API_URL =
+//   import.meta.env.VITE_API_URL ||
+//   "http://127.0.0.1:8000";
+
+// function Products({ onOpenAuth }) {
+//   const navigate = useNavigate();
+
+//   const [products, setProducts] = useState([]);
+//   const [isAdmin, setIsAdmin] = useState(false);
+//   const [loading, setLoading] = useState(true);
+
+//   // ==========================================
+//   // GET CURRENT USER
+//   // ==========================================
+
+//   const getCurrentUser = async () => {
+//     const token = localStorage.getItem("access");
+
+//     if (!token) {
+//       setIsAdmin(false);
+//       localStorage.setItem("isAdmin", "false");
+//       return;
+//     }
+
+//     try {
+//       const response = await fetch(
+//         `${API_URL}/api/user/`,
+//         {
+//           method: "GET",
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+
+//       if (!response.ok) {
+//         throw new Error("Authentication failed");
+//       }
+
+//       const userData = await response.json();
+
+//       console.log("Logged User:", userData);
+
+//       if (userData.is_staff === true) {
+//         setIsAdmin(true);
+
+//         localStorage.setItem(
+//           "isAdmin",
+//           "true"
+//         );
+//       } else {
+//         setIsAdmin(false);
+
+//         localStorage.setItem(
+//           "isAdmin",
+//           "false"
+//         );
+//       }
+
+//       return true;
+
+//     } catch (error) {
+//       console.error(
+//         "User Error:",
+//         error
+//       );
+
+//       setIsAdmin(false);
+
+//       localStorage.setItem(
+//         "isAdmin",
+//         "false"
+//       );
+
+//       return false;
+//     }
+//   };
+
+//   // ==========================================
+//   // GET PRODUCTS
+//   // ==========================================
+
+//   const getProducts = async () => {
+//     const token =
+//       localStorage.getItem("access");
+
+//     try {
+//       const response = await fetch(
+//         `${API_URL}/api/products/`,
+//         {
+//           method: "GET",
+
+//           // IMPORTANT:
+//           // Admin token send ஆகணும்
+//           headers: token
+//             ? {
+//                 Authorization:
+//                   `Bearer ${token}`,
+//               }
+//             : {},
+//         }
+//       );
+
+//       if (!response.ok) {
+//         throw new Error(
+//           "Failed to fetch products"
+//         );
+//       }
+
+//       const data =
+//         await response.json();
+
+//       console.log(
+//         "Products from API:",
+//         data
+//       );
+
+//       const productList =
+//         Array.isArray(data)
+//           ? data
+//           : data.results || [];
+
+//       setProducts(productList);
+
+//     } catch (error) {
+//       console.error(
+//         "Product Error:",
+//         error
+//       );
+
+//       setProducts([]);
+
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // ==========================================
+//   // LOAD USER + PRODUCTS
+//   // ==========================================
+
+//   useEffect(() => {
+//     const loadData = async () => {
+
+//       await getCurrentUser();
+
+//       await getProducts();
+//     };
+
+//     loadData();
+//   }, []);
+
+//   // ==========================================
+//   // CHECK LOGIN + REFRESH TOKEN
+//   // ==========================================
+
+//   const checkLogin = async (
+//     action,
+//     product
+//   ) => {
+
+//     let accessToken =
+//       localStorage.getItem("access");
+
+//     const refreshToken =
+//       localStorage.getItem("refresh");
+
+//     // ========================================
+//     // NO ACCESS TOKEN
+//     // ========================================
+
+//     if (!accessToken) {
+
+//       console.log(
+//         "NO ACCESS TOKEN - OPEN SIGNUP"
+//       );
+
+//       localStorage.setItem(
+//         "pendingAction",
+//         action
+//       );
+
+//       localStorage.setItem(
+//         "pendingProduct",
+//         JSON.stringify(product)
+//       );
+
+//       if (onOpenAuth) {
+//         onOpenAuth();
+//       }
+
+//       return false;
+//     }
+
+//     // ========================================
+//     // CHECK ACCESS TOKEN
+//     // ========================================
+
+//     try {
+
+//       const userResponse =
+//         await fetch(
+//           `${API_URL}/api/user/`,
+//           {
+//             method: "GET",
+
+//             headers: {
+//               Authorization:
+//                 `Bearer ${accessToken}`,
+//             },
+//           }
+//         );
+
+//       // ======================================
+//       // ACCESS TOKEN VALID
+//       // ======================================
+
+//       if (userResponse.ok) {
+
+//         console.log(
+//           "ACCESS TOKEN VALID"
+//         );
+
+//         return true;
+//       }
+
+//       // ======================================
+//       // ACCESS TOKEN EXPIRED
+//       // ======================================
+
+//       console.log(
+//         "ACCESS TOKEN EXPIRED"
+//       );
+
+//       // ======================================
+//       // NO REFRESH TOKEN
+//       // ======================================
+
+//       if (!refreshToken) {
+
+//         console.log(
+//           "NO REFRESH TOKEN"
+//         );
+
+//         localStorage.removeItem(
+//           "access"
+//         );
+
+//         localStorage.removeItem(
+//           "refresh"
+//         );
+
+//         localStorage.setItem(
+//           "pendingAction",
+//           action
+//         );
+
+//         localStorage.setItem(
+//           "pendingProduct",
+//           JSON.stringify(product)
+//         );
+
+//         if (onOpenAuth) {
+//           onOpenAuth();
+//         }
+
+//         return false;
+//       }
+
+//       // ======================================
+//       // REFRESH ACCESS TOKEN
+//       // ======================================
+
+//       const refreshResponse =
+//         await fetch(
+//           `${API_URL}/api/token/refresh/`,
+//           {
+//             method: "POST",
+
+//             headers: {
+//               "Content-Type":
+//                 "application/json",
+//             },
+
+//             body: JSON.stringify({
+//               refresh: refreshToken,
+//             }),
+//           }
+//         );
+
+//       const refreshData =
+//         await refreshResponse.json();
+
+//       // ======================================
+//       // REFRESH FAILED
+//       // ======================================
+
+//       if (!refreshResponse.ok) {
+
+//         console.log(
+//           "REFRESH TOKEN EXPIRED"
+//         );
+
+//         localStorage.removeItem(
+//           "access"
+//         );
+
+//         localStorage.removeItem(
+//           "refresh"
+//         );
+
+//         localStorage.setItem(
+//           "pendingAction",
+//           action
+//         );
+
+//         localStorage.setItem(
+//           "pendingProduct",
+//           JSON.stringify(product)
+//         );
+
+//         if (onOpenAuth) {
+//           onOpenAuth();
+//         }
+
+//         return false;
+//       }
+
+//       // ======================================
+//       // SAVE NEW ACCESS TOKEN
+//       // ======================================
+
+//       localStorage.setItem(
+//         "access",
+//         refreshData.access
+//       );
+
+//       console.log(
+//         "NEW ACCESS TOKEN CREATED"
+//       );
+
+//       return true;
+
+//     } catch (error) {
+
+//       console.error(
+//         "TOKEN CHECK ERROR:",
+//         error
+//       );
+
+//       localStorage.removeItem(
+//         "access"
+//       );
+
+//       localStorage.removeItem(
+//         "refresh"
+//       );
+
+//       localStorage.setItem(
+//         "pendingAction",
+//         action
+//       );
+
+//       localStorage.setItem(
+//         "pendingProduct",
+//         JSON.stringify(product)
+//       );
+
+//       if (onOpenAuth) {
+//         onOpenAuth();
+//       }
+
+//       return false;
+//     }
+//   };
+
+//   // ==========================================
+//   // ADD TO CART
+//   // ==========================================
+
+//   const addToCart = async (product) => {
+
+//     console.log(
+//       "ADD TO CART:",
+//       product
+//     );
+
+//     const canContinue =
+//       await checkLogin(
+//         "cart",
+//         product
+//       );
+
+//     if (!canContinue) {
+//       return;
+//     }
+
+//     await addProductToCart(product);
+//   };
+
+//   // ==========================================
+//   // ADD PRODUCT TO CART API
+//   // ==========================================
+
+//   const addProductToCart = async (
+//     product
+//   ) => {
+
+//     const token =
+//       localStorage.getItem("access");
+
+//     try {
+
+//       const response =
+//         await fetch(
+//           `${API_URL}/api/cart/`,
+//           {
+//             method: "POST",
+
+//             headers: {
+//               "Content-Type":
+//                 "application/json",
+
+//               Authorization:
+//                 `Bearer ${token}`,
+//             },
+
+//             body: JSON.stringify({
+//               product: product.id,
+//               quantity: 1,
+//             }),
+//           }
+//         );
+
+//       const data =
+//         await response.json();
+
+//       console.log(
+//         "Cart Response:",
+//         data
+//       );
+
+//       if (response.ok) {
+
+//         alert(
+//           "Product added to cart!"
+//         );
+
+//         localStorage.removeItem(
+//           "pendingAction"
+//         );
+
+//         localStorage.removeItem(
+//           "pendingProduct"
+//         );
+
+//         navigate("/cart");
+
+//       } else if (
+//         response.status === 401
+//       ) {
+
+//         console.log(
+//           "CART TOKEN EXPIRED"
+//         );
+
+//         localStorage.removeItem(
+//           "access"
+//         );
+
+//         localStorage.removeItem(
+//           "refresh"
+//         );
+
+//         localStorage.setItem(
+//           "pendingAction",
+//           "cart"
+//         );
+
+//         localStorage.setItem(
+//           "pendingProduct",
+//           JSON.stringify(product)
+//         );
+
+//         if (onOpenAuth) {
+//           onOpenAuth();
+//         }
+
+//       } else {
+
+//         alert(
+//           data.message ||
+//             JSON.stringify(data)
+//         );
+//       }
+
+//     } catch (error) {
+
+//       console.error(
+//         "Cart Error:",
+//         error
+//       );
+
+//       alert(
+//         "Server connection error"
+//       );
+//     }
+//   };
+
+//   // ==========================================
+//   // BUY NOW
+//   // ==========================================
+
+//   const buyNow = async (product) => {
+
+//     console.log(
+//       "BUY NOW:",
+//       product
+//     );
+
+//     const canContinue =
+//       await checkLogin(
+//         "buy",
+//         product
+//       );
+
+//     if (!canContinue) {
+//       return;
+//     }
+
+//     const buyNowProduct = {
+//       ...product,
+
+//       price: `$${product.price}`,
+
+//       quantity: 1,
+//     };
+
+//     localStorage.setItem(
+//       "buyNowProduct",
+//       JSON.stringify(
+//         buyNowProduct
+//       )
+//     );
+
+//     localStorage.removeItem(
+//       "pendingAction"
+//     );
+
+//     localStorage.removeItem(
+//       "pendingProduct"
+//     );
+
+//     navigate("/checkout");
+//   };
+
+//   // ==========================================
+//   // DELETE PRODUCT
+//   // ==========================================
+
+//   const deleteProduct = async (
+//     id
+//   ) => {
+
+//     const confirmDelete =
+//       window.confirm(
+//         "Are you sure you want to delete this product?"
+//       );
+
+//     if (!confirmDelete) {
+//       return;
+//     }
+
+//     const token =
+//       localStorage.getItem("access");
+
+//     try {
+
+//       const response =
+//         await fetch(
+//           `${API_URL}/api/products/${id}/`,
+//           {
+//             method: "DELETE",
+
+//             headers: {
+//               Authorization:
+//                 `Bearer ${token}`,
+//             },
+//           }
+//         );
+
+//       if (response.ok) {
+
+//         alert(
+//           "Product deleted successfully!"
+//         );
+
+//         setProducts(
+//           (oldProducts) =>
+//             oldProducts.filter(
+//               (product) =>
+//                 product.id !== id
+//             )
+//         );
+
+//       } else if (
+//         response.status === 401
+//       ) {
+
+//         alert(
+//           "Your login session expired. Please login again."
+//         );
+
+//       } else {
+
+//         const data =
+//           await response.json();
+
+//         console.error(
+//           "Delete Error:",
+//           data
+//         );
+
+//         alert(
+//           "Delete failed"
+//         );
+//       }
+
+//     } catch (error) {
+
+//       console.error(
+//         "Delete Error:",
+//         error
+//       );
+
+//       alert(
+//         "Server connection error"
+//       );
+//     }
+//   };
+
+//   // ==========================================
+//   // LOADING
+//   // ==========================================
+
+//   if (loading) {
+
+//     return (
+//       <section className="products-section">
+
+//         <div className="products-title">
+
+//           <h2>
+//             Our{" "}
+//             <span>products</span>
+//           </h2>
+
+//           <div className="products-line"></div>
+
+//         </div>
+
+//         <p>
+//           Loading products...
+//         </p>
+
+//       </section>
+//     );
+//   }
+
+//   // ==========================================
+//   // PAGE
+//   // ==========================================
+
+//   return (
+//     <section className="products-section">
+
+//       {/* ======================================
+//           PRODUCTS TITLE
+//       ====================================== */}
+
+//       <div className="products-title">
+
+//         <h2>
+//           Our{" "}
+//           <span>products</span>
+//         </h2>
+
+//         <div className="products-line"></div>
+
+//         {/* ADMIN ADD PRODUCT */}
+
+//         {isAdmin && (
+//           <button
+//             type="button"
+//             className="add-product-btn"
+//             onClick={() =>
+//               navigate("/add-product")
+//             }
+//           >
+//             + Add Product
+//           </button>
+//         )}
+
+//       </div>
+
+//       {/* ======================================
+//           PRODUCTS GRID
+//       ====================================== */}
+
+//       <div className="products-grid">
+
+//         {products.length === 0 ? (
+
+//           <div className="no-products">
+
+//             <p>
+//               No products available
+//             </p>
+
+//           </div>
+
+//         ) : (
+
+//           products.map(
+//             (product) => (
+
+//               <div
+//                 className="product-card"
+//                 key={product.id}
+//               >
+
+//                 {/* IMAGE */}
+
+//                 <div className="product-image">
+
+//                   <img
+//                     src={
+//                       product.image
+//                         ? product.image.startsWith(
+//                             "http"
+//                           )
+//                           ? product.image
+//                           : `${API_URL}${product.image}`
+//                         : "/products/p1.png"
+//                     }
+//                     alt={product.name}
+//                   />
+
+//                 </div>
+
+//                 {/* PRODUCT INFO */}
+
+//                 <div className="product-info">
+
+//                   <h3>
+//                     {product.name}
+//                   </h3>
+
+//                   <p>
+//                     ${product.price}
+//                   </p>
+
+//                 </div>
+
+//                 {/* BUTTONS */}
+
+//                 <div className="product-actions">
+
+//                   {isAdmin ? (
+
+//                     <>
+//                       {/* EDIT */}
+
+//                       <button
+//                         type="button"
+//                         className="edit-btn"
+//                         onClick={() =>
+//                           navigate(
+//                             `/edit-product/${product.id}`
+//                           )
+//                         }
+//                       >
+//                         Edit
+//                       </button>
+
+//                       {/* DELETE */}
+
+//                       <button
+//                         type="button"
+//                         className="delete-btn"
+//                         onClick={() =>
+//                           deleteProduct(
+//                             product.id
+//                           )
+//                         }
+//                       >
+//                         Delete
+//                       </button>
+//                     </>
+
+//                   ) : (
+
+//                     <>
+//                       {/* ADD TO CART */}
+
+//                       <button
+//                         type="button"
+//                         className="cart-btn"
+//                         onClick={() =>
+//                           addToCart(
+//                             product
+//                           )
+//                         }
+//                       >
+//                         Add to Cart
+//                       </button>
+
+//                       {/* BUY NOW */}
+
+//                       <button
+//                         type="button"
+//                         className="buy-btn"
+//                         onClick={() =>
+//                           buyNow(
+//                             product
+//                           )
+//                         }
+//                       >
+//                         Buy Now
+//                       </button>
+//                     </>
+
+//                   )}
+
+//                 </div>
+
+//               </div>
+//             )
+//           )
+
+//         )}
+
+//       </div>
+
+//     </section>
+//   );
+// }
+
+// export default Products;
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Products.css";
@@ -6619,15 +7472,12 @@ function Products({ onOpenAuth }) {
     }
 
     try {
-      const response = await fetch(
-        `${API_URL}/api/user/`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${API_URL}/api/user/`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Authentication failed");
@@ -6639,34 +7489,18 @@ function Products({ onOpenAuth }) {
 
       if (userData.is_staff === true) {
         setIsAdmin(true);
-
-        localStorage.setItem(
-          "isAdmin",
-          "true"
-        );
+        localStorage.setItem("isAdmin", "true");
       } else {
         setIsAdmin(false);
-
-        localStorage.setItem(
-          "isAdmin",
-          "false"
-        );
+        localStorage.setItem("isAdmin", "false");
       }
 
       return true;
-
     } catch (error) {
-      console.error(
-        "User Error:",
-        error
-      );
+      console.error("User Error:", error);
 
       setIsAdmin(false);
-
-      localStorage.setItem(
-        "isAdmin",
-        "false"
-      );
+      localStorage.setItem("isAdmin", "false");
 
       return false;
     }
@@ -6677,55 +7511,34 @@ function Products({ onOpenAuth }) {
   // ==========================================
 
   const getProducts = async () => {
-    const token =
-      localStorage.getItem("access");
+    const token = localStorage.getItem("access");
 
     try {
-      const response = await fetch(
-        `${API_URL}/api/products/`,
-        {
-          method: "GET",
-
-          // IMPORTANT:
-          // Admin token send ஆகணும்
-          headers: token
-            ? {
-                Authorization:
-                  `Bearer ${token}`,
-              }
-            : {},
-        }
-      );
+      const response = await fetch(`${API_URL}/api/products/`, {
+        method: "GET",
+        headers: token
+          ? {
+              Authorization: `Bearer ${token}`,
+            }
+          : {},
+      });
 
       if (!response.ok) {
-        throw new Error(
-          "Failed to fetch products"
-        );
+        throw new Error("Failed to fetch products");
       }
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
-      console.log(
-        "Products from API:",
-        data
-      );
+      console.log("Products from API:", data);
 
-      const productList =
-        Array.isArray(data)
-          ? data
-          : data.results || [];
+      const productList = Array.isArray(data)
+        ? data
+        : data.results || [];
 
       setProducts(productList);
-
     } catch (error) {
-      console.error(
-        "Product Error:",
-        error
-      );
-
+      console.error("Product Error:", error);
       setProducts([]);
-
     } finally {
       setLoading(false);
     }
@@ -6737,9 +7550,7 @@ function Products({ onOpenAuth }) {
 
   useEffect(() => {
     const loadData = async () => {
-
       await getCurrentUser();
-
       await getProducts();
     };
 
@@ -6750,32 +7561,16 @@ function Products({ onOpenAuth }) {
   // CHECK LOGIN + REFRESH TOKEN
   // ==========================================
 
-  const checkLogin = async (
-    action,
-    product
-  ) => {
+  const checkLogin = async (action, product) => {
+    let accessToken = localStorage.getItem("access");
+    const refreshToken = localStorage.getItem("refresh");
 
-    let accessToken =
-      localStorage.getItem("access");
-
-    const refreshToken =
-      localStorage.getItem("refresh");
-
-    // ========================================
     // NO ACCESS TOKEN
-    // ========================================
 
     if (!accessToken) {
+      console.log("NO ACCESS TOKEN - OPEN SIGNUP");
 
-      console.log(
-        "NO ACCESS TOKEN - OPEN SIGNUP"
-      );
-
-      localStorage.setItem(
-        "pendingAction",
-        action
-      );
-
+      localStorage.setItem("pendingAction", action);
       localStorage.setItem(
         "pendingProduct",
         JSON.stringify(product)
@@ -6788,69 +7583,36 @@ function Products({ onOpenAuth }) {
       return false;
     }
 
-    // ========================================
     // CHECK ACCESS TOKEN
-    // ========================================
 
     try {
+      const userResponse = await fetch(`${API_URL}/api/user/`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-      const userResponse =
-        await fetch(
-          `${API_URL}/api/user/`,
-          {
-            method: "GET",
-
-            headers: {
-              Authorization:
-                `Bearer ${accessToken}`,
-            },
-          }
-        );
-
-      // ======================================
       // ACCESS TOKEN VALID
-      // ======================================
 
       if (userResponse.ok) {
-
-        console.log(
-          "ACCESS TOKEN VALID"
-        );
-
+        console.log("ACCESS TOKEN VALID");
         return true;
       }
 
-      // ======================================
       // ACCESS TOKEN EXPIRED
-      // ======================================
 
-      console.log(
-        "ACCESS TOKEN EXPIRED"
-      );
+      console.log("ACCESS TOKEN EXPIRED");
 
-      // ======================================
       // NO REFRESH TOKEN
-      // ======================================
 
       if (!refreshToken) {
+        console.log("NO REFRESH TOKEN");
 
-        console.log(
-          "NO REFRESH TOKEN"
-        );
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
 
-        localStorage.removeItem(
-          "access"
-        );
-
-        localStorage.removeItem(
-          "refresh"
-        );
-
-        localStorage.setItem(
-          "pendingAction",
-          action
-        );
-
+        localStorage.setItem("pendingAction", action);
         localStorage.setItem(
           "pendingProduct",
           JSON.stringify(product)
@@ -6863,53 +7625,32 @@ function Products({ onOpenAuth }) {
         return false;
       }
 
-      // ======================================
       // REFRESH ACCESS TOKEN
-      // ======================================
 
-      const refreshResponse =
-        await fetch(
-          `${API_URL}/api/token/refresh/`,
-          {
-            method: "POST",
+      const refreshResponse = await fetch(
+        `${API_URL}/api/token/refresh/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            refresh: refreshToken,
+          }),
+        }
+      );
 
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
+      const refreshData = await refreshResponse.json();
 
-            body: JSON.stringify({
-              refresh: refreshToken,
-            }),
-          }
-        );
-
-      const refreshData =
-        await refreshResponse.json();
-
-      // ======================================
       // REFRESH FAILED
-      // ======================================
 
       if (!refreshResponse.ok) {
+        console.log("REFRESH TOKEN EXPIRED");
 
-        console.log(
-          "REFRESH TOKEN EXPIRED"
-        );
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
 
-        localStorage.removeItem(
-          "access"
-        );
-
-        localStorage.removeItem(
-          "refresh"
-        );
-
-        localStorage.setItem(
-          "pendingAction",
-          action
-        );
-
+        localStorage.setItem("pendingAction", action);
         localStorage.setItem(
           "pendingProduct",
           JSON.stringify(product)
@@ -6922,41 +7663,20 @@ function Products({ onOpenAuth }) {
         return false;
       }
 
-      // ======================================
       // SAVE NEW ACCESS TOKEN
-      // ======================================
 
-      localStorage.setItem(
-        "access",
-        refreshData.access
-      );
+      localStorage.setItem("access", refreshData.access);
 
-      console.log(
-        "NEW ACCESS TOKEN CREATED"
-      );
+      console.log("NEW ACCESS TOKEN CREATED");
 
       return true;
-
     } catch (error) {
+      console.error("TOKEN CHECK ERROR:", error);
 
-      console.error(
-        "TOKEN CHECK ERROR:",
-        error
-      );
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
 
-      localStorage.removeItem(
-        "access"
-      );
-
-      localStorage.removeItem(
-        "refresh"
-      );
-
-      localStorage.setItem(
-        "pendingAction",
-        action
-      );
-
+      localStorage.setItem("pendingAction", action);
       localStorage.setItem(
         "pendingProduct",
         JSON.stringify(product)
@@ -6975,17 +7695,9 @@ function Products({ onOpenAuth }) {
   // ==========================================
 
   const addToCart = async (product) => {
+    console.log("ADD TO CART:", product);
 
-    console.log(
-      "ADD TO CART:",
-      product
-    );
-
-    const canContinue =
-      await checkLogin(
-        "cart",
-        product
-      );
+    const canContinue = await checkLogin("cart", product);
 
     if (!canContinue) {
       return;
@@ -6998,81 +7710,40 @@ function Products({ onOpenAuth }) {
   // ADD PRODUCT TO CART API
   // ==========================================
 
-  const addProductToCart = async (
-    product
-  ) => {
-
-    const token =
-      localStorage.getItem("access");
+  const addProductToCart = async (product) => {
+    const token = localStorage.getItem("access");
 
     try {
+      const response = await fetch(`${API_URL}/api/cart/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          product: product.id,
+          quantity: 1,
+        }),
+      });
 
-      const response =
-        await fetch(
-          `${API_URL}/api/cart/`,
-          {
-            method: "POST",
+      const data = await response.json();
 
-            headers: {
-              "Content-Type":
-                "application/json",
-
-              Authorization:
-                `Bearer ${token}`,
-            },
-
-            body: JSON.stringify({
-              product: product.id,
-              quantity: 1,
-            }),
-          }
-        );
-
-      const data =
-        await response.json();
-
-      console.log(
-        "Cart Response:",
-        data
-      );
+      console.log("Cart Response:", data);
 
       if (response.ok) {
+        alert("Product added to cart!");
 
-        alert(
-          "Product added to cart!"
-        );
-
-        localStorage.removeItem(
-          "pendingAction"
-        );
-
-        localStorage.removeItem(
-          "pendingProduct"
-        );
+        localStorage.removeItem("pendingAction");
+        localStorage.removeItem("pendingProduct");
 
         navigate("/cart");
+      } else if (response.status === 401) {
+        console.log("CART TOKEN EXPIRED");
 
-      } else if (
-        response.status === 401
-      ) {
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
 
-        console.log(
-          "CART TOKEN EXPIRED"
-        );
-
-        localStorage.removeItem(
-          "access"
-        );
-
-        localStorage.removeItem(
-          "refresh"
-        );
-
-        localStorage.setItem(
-          "pendingAction",
-          "cart"
-        );
-
+        localStorage.setItem("pendingAction", "cart");
         localStorage.setItem(
           "pendingProduct",
           JSON.stringify(product)
@@ -7081,25 +7752,12 @@ function Products({ onOpenAuth }) {
         if (onOpenAuth) {
           onOpenAuth();
         }
-
       } else {
-
-        alert(
-          data.message ||
-            JSON.stringify(data)
-        );
+        alert(data.message || JSON.stringify(data));
       }
-
     } catch (error) {
-
-      console.error(
-        "Cart Error:",
-        error
-      );
-
-      alert(
-        "Server connection error"
-      );
+      console.error("Cart Error:", error);
+      alert("Server connection error");
     }
   };
 
@@ -7108,17 +7766,9 @@ function Products({ onOpenAuth }) {
   // ==========================================
 
   const buyNow = async (product) => {
+    console.log("BUY NOW:", product);
 
-    console.log(
-      "BUY NOW:",
-      product
-    );
-
-    const canContinue =
-      await checkLogin(
-        "buy",
-        product
-      );
+    const canContinue = await checkLogin("buy", product);
 
     if (!canContinue) {
       return;
@@ -7126,26 +7776,17 @@ function Products({ onOpenAuth }) {
 
     const buyNowProduct = {
       ...product,
-
       price: `$${product.price}`,
-
       quantity: 1,
     };
 
     localStorage.setItem(
       "buyNowProduct",
-      JSON.stringify(
-        buyNowProduct
-      )
+      JSON.stringify(buyNowProduct)
     );
 
-    localStorage.removeItem(
-      "pendingAction"
-    );
-
-    localStorage.removeItem(
-      "pendingProduct"
-    );
+    localStorage.removeItem("pendingAction");
+    localStorage.removeItem("pendingProduct");
 
     navigate("/checkout");
   };
@@ -7154,84 +7795,48 @@ function Products({ onOpenAuth }) {
   // DELETE PRODUCT
   // ==========================================
 
-  const deleteProduct = async (
-    id
-  ) => {
-
-    const confirmDelete =
-      window.confirm(
-        "Are you sure you want to delete this product?"
-      );
+  const deleteProduct = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this product?"
+    );
 
     if (!confirmDelete) {
       return;
     }
 
-    const token =
-      localStorage.getItem("access");
+    const token = localStorage.getItem("access");
 
     try {
-
-      const response =
-        await fetch(
-          `${API_URL}/api/products/${id}/`,
-          {
-            method: "DELETE",
-
-            headers: {
-              Authorization:
-                `Bearer ${token}`,
-            },
-          }
-        );
+      const response = await fetch(
+        `${API_URL}/api/products/${id}/`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.ok) {
+        alert("Product deleted successfully!");
 
-        alert(
-          "Product deleted successfully!"
+        setProducts((oldProducts) =>
+          oldProducts.filter((product) => product.id !== id)
         );
-
-        setProducts(
-          (oldProducts) =>
-            oldProducts.filter(
-              (product) =>
-                product.id !== id
-            )
-        );
-
-      } else if (
-        response.status === 401
-      ) {
-
+      } else if (response.status === 401) {
         alert(
           "Your login session expired. Please login again."
         );
-
       } else {
+        const data = await response.json();
 
-        const data =
-          await response.json();
+        console.error("Delete Error:", data);
 
-        console.error(
-          "Delete Error:",
-          data
-        );
-
-        alert(
-          "Delete failed"
-        );
+        alert("Delete failed");
       }
-
     } catch (error) {
-
-      console.error(
-        "Delete Error:",
-        error
-      );
-
-      alert(
-        "Server connection error"
-      );
+      console.error("Delete Error:", error);
+      alert("Server connection error");
     }
   };
 
@@ -7240,25 +7845,17 @@ function Products({ onOpenAuth }) {
   // ==========================================
 
   if (loading) {
-
     return (
       <section className="products-section">
-
         <div className="products-title">
-
           <h2>
-            Our{" "}
-            <span>products</span>
+            Our <span>products</span>
           </h2>
 
           <div className="products-line"></div>
-
         </div>
 
-        <p>
-          Loading products...
-        </p>
-
+        <p>Loading products...</p>
       </section>
     );
   }
@@ -7269,16 +7866,11 @@ function Products({ onOpenAuth }) {
 
   return (
     <section className="products-section">
-
-      {/* ======================================
-          PRODUCTS TITLE
-      ====================================== */}
+      {/* PRODUCTS TITLE */}
 
       <div className="products-title">
-
         <h2>
-          Our{" "}
-          <span>products</span>
+          Our <span>products</span>
         </h2>
 
         <div className="products-line"></div>
@@ -7289,155 +7881,109 @@ function Products({ onOpenAuth }) {
           <button
             type="button"
             className="add-product-btn"
-            onClick={() =>
-              navigate("/add-product")
-            }
+            onClick={() => {
+              localStorage.setItem(
+                "pendingAction",
+                "addProduct"
+              );
+
+              if (onOpenAuth) {
+                onOpenAuth();
+              }
+            }}
           >
             + Add Product
           </button>
         )}
-
       </div>
 
-      {/* ======================================
-          PRODUCTS GRID
-      ====================================== */}
+      {/* PRODUCTS GRID */}
 
       <div className="products-grid">
-
         {products.length === 0 ? (
-
           <div className="no-products">
-
-            <p>
-              No products available
-            </p>
-
+            <p>No products available</p>
           </div>
-
         ) : (
+          products.map((product) => (
+            <div className="product-card" key={product.id}>
+              {/* IMAGE */}
 
-          products.map(
-            (product) => (
-
-              <div
-                className="product-card"
-                key={product.id}
-              >
-
-                {/* IMAGE */}
-
-                <div className="product-image">
-
-                  <img
-                    src={
-                      product.image
-                        ? product.image.startsWith(
-                            "http"
-                          )
-                          ? product.image
-                          : `${API_URL}${product.image}`
-                        : "/products/p1.png"
-                    }
-                    alt={product.name}
-                  />
-
-                </div>
-
-                {/* PRODUCT INFO */}
-
-                <div className="product-info">
-
-                  <h3>
-                    {product.name}
-                  </h3>
-
-                  <p>
-                    ${product.price}
-                  </p>
-
-                </div>
-
-                {/* BUTTONS */}
-
-                <div className="product-actions">
-
-                  {isAdmin ? (
-
-                    <>
-                      {/* EDIT */}
-
-                      <button
-                        type="button"
-                        className="edit-btn"
-                        onClick={() =>
-                          navigate(
-                            `/edit-product/${product.id}`
-                          )
-                        }
-                      >
-                        Edit
-                      </button>
-
-                      {/* DELETE */}
-
-                      <button
-                        type="button"
-                        className="delete-btn"
-                        onClick={() =>
-                          deleteProduct(
-                            product.id
-                          )
-                        }
-                      >
-                        Delete
-                      </button>
-                    </>
-
-                  ) : (
-
-                    <>
-                      {/* ADD TO CART */}
-
-                      <button
-                        type="button"
-                        className="cart-btn"
-                        onClick={() =>
-                          addToCart(
-                            product
-                          )
-                        }
-                      >
-                        Add to Cart
-                      </button>
-
-                      {/* BUY NOW */}
-
-                      <button
-                        type="button"
-                        className="buy-btn"
-                        onClick={() =>
-                          buyNow(
-                            product
-                          )
-                        }
-                      >
-                        Buy Now
-                      </button>
-                    </>
-
-                  )}
-
-                </div>
-
+              <div className="product-image">
+                <img
+                  src={
+                    product.image
+                      ? product.image.startsWith("http")
+                        ? product.image
+                        : `${API_URL}${product.image}`
+                      : "/products/p1.png"
+                  }
+                  alt={product.name}
+                />
               </div>
-            )
-          )
 
+              {/* PRODUCT INFO */}
+
+              <div className="product-info">
+                <h3>{product.name}</h3>
+                <p>${product.price}</p>
+              </div>
+
+              {/* BUTTONS */}
+
+              <div className="product-actions">
+                {isAdmin ? (
+                  <>
+                    {/* EDIT */}
+
+                    <button
+                      type="button"
+                      className="edit-btn"
+                      onClick={() =>
+                        navigate(`/edit-product/${product.id}`)
+                      }
+                    >
+                      Edit
+                    </button>
+
+                    {/* DELETE */}
+
+                    <button
+                      type="button"
+                      className="delete-btn"
+                      onClick={() => deleteProduct(product.id)}
+                    >
+                      Delete
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {/* ADD TO CART */}
+
+                    <button
+                      type="button"
+                      className="cart-btn"
+                      onClick={() => addToCart(product)}
+                    >
+                      Add to Cart
+                    </button>
+
+                    {/* BUY NOW */}
+
+                    <button
+                      type="button"
+                      className="buy-btn"
+                      onClick={() => buyNow(product)}
+                    >
+                      Buy Now
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          ))
         )}
-
       </div>
-
     </section>
   );
 }
